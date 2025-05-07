@@ -247,17 +247,20 @@ class PluginManager
 		}
 
 		// 创建权限
+		$PermissionTo = [];
 		foreach ($permissions as $permission) {
-			Permission::firstOrCreate([
-				'name' => $permission,
-				'guard_name' => 'admin'
-			]);
+			if ($permission['parent_id']) {
+				$parentPermission = Permission::where('name', $permission['parent_id'])->first();
+				$permission['parent_id'] = $parentPermission ? $parentPermission->id : null;
+			}
+			$PermissionTo[] = $permission['name'];
+			Permission::firstOrCreate($permission);
 		}
 
 		// 同步到管理员角色
-		$adminRole = Role::where('name', 'admin')->first();
-		if ($adminRole) {
-			$adminRole->givePermissionTo($permissions);
+		$adminRole = Role::where('name', 'Admin')->first();
+		if ($adminRole && $PermissionTo) {
+			$adminRole->givePermissionTo($PermissionTo);
 		}
 	}
 
@@ -272,15 +275,18 @@ class PluginManager
 		if (empty($permissions)) {
 			return;
 		}
-
-		// 从管理员角色移除权限
-		$adminRole = Role::where('name', 'admin')->first();
-		if ($adminRole) {
-			$adminRole->revokePermissionTo($permissions);
+		$PermissionTo = [];
+		foreach ($permissions as $permission) {
+			$PermissionTo[] = $permission['name'];
 		}
 
-		// 删除权限
-		Permission::whereIn('name', $permissions)->delete();
+		// 同步到管理员角色
+		$adminRole = Role::where('name', 'Admin')->first();
+		if ($adminRole && $PermissionTo) {
+			$adminRole->revokePermissionTo($PermissionTo);
+			// 删除权限
+			Permission::whereIn('name', $PermissionTo)->delete();
+		}
 	}
 
 	public function getPluginPath($name)

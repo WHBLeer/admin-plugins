@@ -28,7 +28,6 @@ class PluginServiceProvider extends ServiceProvider
 		$this->registerPublishes();
 		$this->loadRoutes();
 		$this->loadViews();
-		$this->loadMigrations();
 		$this->loadTranslations();
 
 		$this->ensurePermissionsCreated();
@@ -59,10 +58,6 @@ class PluginServiceProvider extends ServiceProvider
 		$this->loadViewsFrom(__DIR__.'/../Resources/views', 'plugins');
 	}
 
-	protected function loadMigrations()
-	{
-		$this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
-	}
 
 	protected function loadTranslations()
 	{
@@ -72,7 +67,7 @@ class PluginServiceProvider extends ServiceProvider
 	protected function ensurePermissionsCreated()
 	{
 		// 只在控制台运行或首次安装时执行
-		if (!$this->app->runningInConsole() && Permission::where('name', 'plugins.view')->exists()) {
+		if (!$this->app->runningInConsole() && Permission::where('name', 'plugins.manage')->exists()) {
 			return;
 		}
 		$system = Permission::firstOrCreate([
@@ -135,8 +130,15 @@ class PluginServiceProvider extends ServiceProvider
 			Permission::firstOrCreate($permission);
 		}
 
-		$adminRole = Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'admin']);
-		$adminRole->givePermissionTo($permissions);
+		// 确保管理员角色存在
+		$superAdmin = Role::firstOrCreate([
+			'name' => 'Super Admin',
+			'guard_name' => 'admin',
+			'description' => '超级管理员',
+		]);
+
+		// 分配权限
+		$superAdmin->givePermissionTo(Permission::all());
 	}
 
 	protected function registerCommands()

@@ -30,12 +30,6 @@ php artisan plugins-system:install
 php artisan migrate
 ```
 
-* Step 2
-```php
-php artisan vendor:publish --provider="Sanlilin\AdminPlugins\Providers\PluginServiceProvider" --tag=plugins-config
-php artisan vendor:publish --provider="Sanlilin\AdminPlugins\Providers\PluginServiceProvider" --tag=plugins-views
-php artisan vendor:publish --provider="Sanlilin\AdminPlugins\Providers\PluginServiceProvider" --tag=plugins-assets
-```
 
 ## Use
 

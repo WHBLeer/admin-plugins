@@ -58,7 +58,6 @@ class PluginGenerator
 		$this->createDefaultView();
 		$this->createRoutesFile();
 		$this->createMigration();
-		$this->createPermissionsMigration();
 	}
 
 	protected function createPluginJson()
@@ -174,21 +173,6 @@ class PluginGenerator
 
 		$migrationPath = $this->pluginPath . '/Database/Migrations';
 		$migrationFile = date('Y_m_d_His') . '_create_' . $this->getSlugName() . '.php';
-
-		File::put($migrationPath . '/' . $migrationFile, $content);
-	}
-
-	protected function createPermissionsMigration()
-	{
-		$stub = File::get($this->stubsPath . '/permissions-migration.stub');
-		$content = str_replace(
-			['DummyTitle','DummySlug'],
-			[$this->getTitle(),$this->getSlugName()],
-			$stub
-		);
-
-		$migrationPath = $this->pluginPath . '/Database/Migrations';
-		$migrationFile = date('Y_m_d_His') . '_create_' . $this->getSlugName() . '_permissions.php';
 
 		File::put($migrationPath . '/' . $migrationFile, $content);
 	}

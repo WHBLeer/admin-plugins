@@ -70,20 +70,26 @@ class InstallPluginsSystemCommand extends Command
 				'parent_id' => $parent->id,
 			],
 		];
-
+		$PermissionTo = [];
 		foreach ($permissions as $permission) {
 			Permission::firstOrCreate($permission);
+			$PermissionTo[] = $permission['name'];
 			$this->line("Created permission: {$permission['name']}");
 		}
 
 		// 确保管理员角色存在
-		$adminRole = Role::firstOrCreate([
-			'name' => 'admin',
-			'guard_name' => 'admin'
+		$superAdmin = Role::firstOrCreate([
+			'name' => 'Super Admin',
+			'guard_name' => 'admin',
+		]);
+		$roleAdmin = Role::firstOrCreate([
+			'name' => 'Admin',
+			'guard_name' => 'admin',
 		]);
 
 		// 分配权限
-		$adminRole->givePermissionTo($permissions);
+		$superAdmin->givePermissionTo(Permission::all());
+		$roleAdmin->givePermissionTo($PermissionTo);
 		$this->info('All permissions assigned to admin role.');
 
 		// 发布资源
