@@ -11,7 +11,7 @@ class PluginServiceProvider extends ServiceProvider
 	public function register()
 	{
 		$this->mergeConfigFrom(
-			__DIR__.'/../../Resources/config/plugins.php', 'plugins'
+			__DIR__.'/../Resources/config/plugins.php', 'plugins'
 		);
 
 		$this->app->singleton('plugins', function ($app) {
@@ -33,42 +33,46 @@ class PluginServiceProvider extends ServiceProvider
 	protected function registerPublishes()
 	{
 		$this->publishes([
-			__DIR__.'/../../Resources/config/plugins.php' => config_path('plugins.php'),
+			__DIR__.'/../Resources/config/plugins.php' => config_path('plugins.php'),
 		], 'plugins-config');
 
 		$this->publishes([
-			__DIR__.'/../../Resources/views' => resource_path('views/vendor/plugins'),
+			__DIR__.'/../Resources/views' => resource_path('views/vendor/plugins'),
 		], 'plugins-views');
 
 		$this->publishes([
-			__DIR__.'/../../Resources/assets' => public_path('assets/vendor/plugins'),
+			__DIR__.'/../Resources/assets' => public_path('assets/vendor/plugins'),
 		], 'plugins-assets');
 	}
 
 	protected function loadRoutes()
 	{
-		$this->loadRoutesFrom(__DIR__.'/../../routes/web.php');
+		$this->loadRoutesFrom(__DIR__.'/../routes/web.php');
 	}
 
 	protected function loadViews()
 	{
-		$this->loadViewsFrom(__DIR__.'/../../Resources/views', 'plugins');
+		$this->loadViewsFrom(__DIR__.'/../Resources/views', 'plugins');
 	}
 
 	protected function loadMigrations()
 	{
-		$this->loadMigrationsFrom(__DIR__.'/../../database/migrations');
+		if (file_exists(__DIR__.'/../database/migrations')) {
+			$this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+		}
 	}
 
 	protected function loadTranslations()
 	{
-		$this->loadTranslationsFrom(__DIR__.'/../../Resources/lang', 'plugins');
+		$this->loadTranslationsFrom(__DIR__.'/../Resources/lang', 'plugins');
 	}
 
 	protected function registerCommands()
 	{
 		$this->commands([
 			\Sanlilin\AdminPlugins\Commands\MakePluginCommand::class,
+			\Sanlilin\AdminPlugins\Commands\PluginRestartCommand::class,
+			\Sanlilin\AdminPlugins\Commands\DeletePluginCommand::class,
 			\Sanlilin\AdminPlugins\Commands\MakePluginControllerCommand::class,
 			\Sanlilin\AdminPlugins\Commands\MakePluginModelCommand::class,
 			\Sanlilin\AdminPlugins\Commands\PluginMigrateCommand::class,

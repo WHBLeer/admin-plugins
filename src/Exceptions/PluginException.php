@@ -61,6 +61,17 @@ class PluginException extends Exception
 	}
 
 	/**
+	 * 插件重启失败异常
+	 *
+	 * @param string $name 插件名称
+	 * @return static
+	 */
+	public static function restartFailed(string $name)
+	{
+		return new static("Failed to restart plugin [{$name}]");
+	}
+
+	/**
 	 * 插件迁移失败异常
 	 *
 	 * @param string $name 插件名称

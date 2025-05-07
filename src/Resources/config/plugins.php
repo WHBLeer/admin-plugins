@@ -1,5 +1,4 @@
 <?php
-// Resources/config/plugins.php
 
 return [
 	'path' => base_path('plugins'),

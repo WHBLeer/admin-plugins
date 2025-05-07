@@ -41,6 +41,11 @@ php artisan vendor:publish --provider="Sanlilin\AdminPlugins\Providers\PluginSer
 php artisan make:plugin ArticlePlugin
 ```
 
+* 重启插件
+```php
+php artisan plugin:restart ArticlePlugin
+```
+
 * 创建插件控制器
 ```php
 php artisan plugin:make-controller ArticlePlugin ArticleController
@@ -69,7 +74,7 @@ php artisan plugin:delete ArticlePlugin
 * 图形界面管理 访问 /admin/plugins
 - 查看所有插件列表
 - 上传 ZIP 格式的插件包
-- 启用/禁用插件
+- 启用/禁用/重启插件
 - 配置插件设置
 - 删除插件
 

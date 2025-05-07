@@ -1,7 +1,10 @@
 {
     "name": "DummyName",
     "title": "DummyTitle",
-    "description": "A Laravel plugin",
+    "description": "Regarding the plugin: Description of DummyTitle",
+    "cover": "",
+    "author": "SanLiLin",
+    "email": "wanghongbin816@gmail.com",
     "version": "1.0.0",
     "namespace": "DummyNamespace",
     "provider": "DummyNamespace\\DummyClassServiceProvider",

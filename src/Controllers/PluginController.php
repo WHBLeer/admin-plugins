@@ -58,6 +58,22 @@ class PluginController extends Controller
 		}
 	}
 
+	public function restart($plugin)
+	{
+		try {
+			$plugin = $this->pluginManager->find($plugin);
+
+			if (!$plugin) {
+				return redirect()->back()->with('error', 'Plugin not found!');
+			}
+
+			$this->pluginManager->restart($plugin->getName());
+
+			return redirect()->back()->with('success', "Plugin [{$plugin->getName()}] restarted successfully!");
+		} catch (\Exception $e) {
+			return redirect()->back()->with('error', $e->getMessage());
+		}
+	}
 	public function upload(Request $request)
 	{
 		$request->validate([

@@ -76,7 +76,7 @@ class PluginManager
 		$plugin = $this->find($name);
 
 		if (!$plugin) {
-			throw new PluginException::pluginNotFound($name);
+			throw PluginException::pluginNotFound($name);
 		}
 
 		$this->registerServiceProvider($plugin);
@@ -95,11 +95,24 @@ class PluginManager
 		$plugin = $this->find($name);
 
 		if (!$plugin) {
-			throw new PluginException::pluginNotFound($name);
+			throw PluginException::pluginNotFound($name);
 		}
 
 		$this->rollbackMigrations($plugin);
 		$plugin->disable();
+
+		return $plugin;
+	}
+	public function restart($name)
+	{
+		$plugin = $this->find($name);
+
+		if (!$plugin) {
+			throw PluginException::pluginNotFound($name);
+		}
+
+		$this->uninstall($name);
+		$this->install($name);
 
 		return $plugin;
 	}
@@ -109,7 +122,7 @@ class PluginManager
 		$plugin = $this->find($name);
 
 		if (!$plugin) {
-			throw new PluginException::pluginNotFound($name);
+			throw PluginException::pluginNotFound($name);
 		}
 
 		if ($plugin->isEnabled()) {
@@ -155,7 +168,7 @@ class PluginManager
 
 		if (File::exists($destination)) {
 			File::deleteDirectory($tempPath);
-			throw new PluginException::pluginAlreadyExists($pluginName);
+			throw PluginException::pluginAlreadyExists($pluginName);
 
 		}
 
