@@ -62,6 +62,21 @@ class Plugin
 		return $this->config['description'] ?? '';
 	}
 
+	public function getCover()
+	{
+		return $this->config['cover'] ?? plugin_cover($this->name);
+	}
+
+	public function getAuthor()
+	{
+		return $this->config['author'] ?? 'SanLiLin';
+	}
+
+	public function getEmail()
+	{
+		return $this->config['email'] ?? 'wanghongbin816@gmail.com';
+	}
+
 	public function isEnabled()
 	{
 		return $this->config['enabled'] ?? false;
