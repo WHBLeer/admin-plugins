@@ -1,0 +1,43 @@
+<?php
+
+namespace DummyNamespace\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+
+class ConfigController extends Controller
+{
+    public function edit()
+    {
+        $this->authorize('configure', 'DummyName');
+
+        return view('DummyName::config', [
+            'config' => config('article-plugin')
+        ]);
+    }
+
+    public function update(Request $request)
+    {
+        $this->authorize('configure', 'DummyName');
+
+        $validated = $request->validate([
+            'per_page' => 'required|integer|min:1|max:100',
+            'enable_comments' => 'boolean',
+            'enable_attachments' => 'boolean',
+            'default_category' => 'required|string|max:255',
+        ]);
+
+        // 更新配置文件
+        $configPath = plugin_path('DummyName/Config/config.php');
+        $config = include $configPath;
+        $config = array_merge($config, $validated);
+
+        file_put_contents($configPath, '<?php return ' . var_export($config, true) . ';');
+
+        // 清除配置缓存
+        Artisan::call('config:clear');
+
+        return redirect()->back()
+            ->with('success', '配置已更新');
+    }
+}

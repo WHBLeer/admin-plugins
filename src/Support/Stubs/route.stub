@@ -1,0 +1,21 @@
+<?php
+use Illuminate\Support\Facades\Route;
+use DummyNamespace\Http\Controllers\DummyClass;
+
+/*
+|--------------------------------------------------------------------------
+| Plugin Routes
+|--------------------------------------------------------------------------
+*/
+
+Route::prefix('DummySlug')->group(function() {
+    Route::get('/', [DummyClass::class,'index']);
+});
+
+Route::prefix('admin/DummySlug')->name('admin.DummySlug.')->middleware('auth:admin')->group(function() {
+    Route::get('/', [DummyClass::class,'index']);
+
+    //  Config
+    Route::get('/config', [DummyClassConfigController::class,'edit'])->name('config.edit');
+    Route::post('/config', [DummyClassConfigController::class,'update'])->name('config.update');
+});

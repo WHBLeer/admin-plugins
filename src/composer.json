@@ -1,0 +1,32 @@
+{
+	"name": "sanlilin/admin-plugins",
+	"description": "A Laravel plugin system for modular development.",
+	"type": "library",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "SanliLin",
+			"email": "wanghongbin816@gmail.com"
+		}
+	],
+	"require": {
+		"php": "^8.2",
+		"laravel/framework": "^11.0",
+		"ext-zip": "*"
+	},
+	"autoload": {
+		"psr-4": {
+			"Sanlilin\\AdminPlugins\\": "src/"
+		}
+	},
+	"extra": {
+		"laravel": {
+			"providers": [
+				"Sanlilin\\AdminPlugins\\Providers\\PluginServiceProvider"
+			],
+			"aliases": {
+				"PluginManager": "Sanlilin\\AdminPlugins\\Facades\\PluginManager"
+			}
+		}
+	}
+}

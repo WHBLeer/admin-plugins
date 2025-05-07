@@ -1,0 +1,28 @@
+<?php
+
+namespace DummyNamespace;
+
+use Illuminate\Support\ServiceProvider;
+
+class DummyClassServiceProvider extends ServiceProvider
+{
+    public function register()
+    {
+        $this->mergeConfigFrom(
+            __DIR__.'/../Config/config.php', 'DummyName'
+        );
+    }
+
+    public function boot()
+    {
+        $this->loadRoutesFrom(__DIR__.'/../Routes/web.php');
+        $this->loadViewsFrom(__DIR__.'/../Resources/views', 'DummyName');
+        $this->loadTranslationsFrom(__DIR__.'/../Resources/lang', 'DummyName');
+
+        if ($this->app->runningInConsole()) {
+            $this->publishes([
+                __DIR__.'/../Assets' => public_path('vendor/DummyName'),
+            ], 'DummyName-assets');
+        }
+    }
+}

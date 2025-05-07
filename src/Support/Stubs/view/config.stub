@@ -1,0 +1,84 @@
+@extends('layout.master')
+@section('title', 'Plugin Settings')
+@section('css')
+    <link rel="stylesheet" href="{{asset('assets/vendor/DummySlug/style.css')}}">
+@endsection
+@section('main-content')
+<div class="container-fluid">
+
+	<!-- Breadcrumb start -->
+	<div class="row m-1">
+		<div class="col-12 ">
+			<h4 class="main-title">Plugin Settings: {{ $plugin->getTitle() }}</h4>
+			<ul class="app-line-breadcrumbs mb-3">
+				<li class="">
+					<a href="#" class="f-s-14 f-w-500">Plugin</a>
+				</li>
+				<li class="active">
+					<a href="#" class="f-s-14 f-w-500">Plugin Settings</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<!-- Breadcrumb end -->
+	<div class="col-xl-12">
+		<div class="card add-blog">
+			<div class="card-header">
+				<h5>Plugin Settings</h5>
+			</div>
+			<div class="card-body">
+				<form action="{{ route('plugins.settings.update', $plugin->getName()) }}" method="POST">
+					@csrf
+					@method('PUT')
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="enabled">Status</label>
+								<select class="form-control" id="enabled" name="enabled" disabled>
+									<option value="1" {{ $plugin->isEnabled() ? 'selected' : '' }}>Enabled</option>
+									<option value="0" {{ !$plugin->isEnabled() ? 'selected' : '' }}>Disabled</option>
+								</select>
+								<small class="form-text text-muted">Change status from plugins list</small>
+							</div>
+						</div>
+
+						<!-- 这里可以根据插件的配置项动态生成表单 -->
+						@foreach($plugin->getConfig() as $key => $value)
+							@if(!in_array($key, ['name', 'title', 'version', 'description', 'enabled']))
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="{{ $key }}">{{ ucfirst(str_replace('_', ' ', $key)) }}</label>
+
+									@if(is_bool($value))
+										<select class="form-control" id="{{ $key }}" name="{{ $key }}">
+											<option value="1" {{ $value ? 'selected' : '' }}>Yes</option>
+											<option value="0" {{ !$value ? 'selected' : '' }}>No</option>
+										</select>
+									@elseif(is_array($value))
+										<textarea class="form-control" id="{{ $key }}" name="{{ $key }}"
+												  rows="3">{{ json_encode($value, JSON_PRETTY_PRINT) }}</textarea>
+									@else
+										<input type="text" class="form-control" id="{{ $key }}" name="{{ $key }}"
+											   value="{{ $value }}">
+									@endif
+								</div>
+							</div>
+							@endif
+						@endforeach
+
+						<div class="col-12 mt-3">
+							<div class="text-end">
+								<button type="submit" class="btn btn-primary">Save Settings</button>
+								<a href="{{ route('plugins.index') }}" class="btn btn-secondary">Back to List</a>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+@endsection
+@section('script')
+<script src="{{asset('assets/vendor/DummySlug/script.js')}}"></script>
+@endsection
