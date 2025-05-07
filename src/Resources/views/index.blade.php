@@ -3,14 +3,14 @@
 @section('css')
 	<!-- glight css -->
 	<link rel="stylesheet" href="{{asset('assets/vendor/glightbox/glightbox.min.css')}}">
-	<link rel="stylesheet" href="{{asset('assets/vendor/admin-plugin/style.css')}}">
+	<link rel="stylesheet" href="{{asset('assets/vendor/plugins/style.css')}}">
 @endsection
 @section('main-content')
 	<div class="container-fluid">
 		<div class="card">
 			<div class="card-header">
 				<div class="d-flex gap-2 justify-content-between flex-sm-row flex-column">
-					<h5>Recent Added</h5>
+					<h5>Plugins Management</h5>
 					<button class="btn btn-primary" data-toggle="modal" data-target="#uploadPluginModal">
 						<i class="fas fa-upload"></i> Upload Plugin
 					</button>
@@ -34,7 +34,7 @@
 					<h1 class="modal-title fs-5" id="uploadPluginModalLabel1">Create Task</h1>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
-				<form action="{{ route('plugins.upload') }}" method="POST" enctype="multipart/form-data">
+				<form action="{{ route('admin.plugins.upload') }}" method="POST" enctype="multipart/form-data">
 					@csrf
 					<div class="modal-body">
 						<div class="form-group">
@@ -61,6 +61,6 @@
 	<script src="{{asset('assets//vendor/glightbox/glightbox.min.js')}}"></script>
 	
 	<!--js-->
-	<script src="{{asset('assets//vendor/admin-plugin/script.js')}}"></script>
+	<script src="{{asset('assets//vendor/plugins/script.js')}}"></script>
 @endsection
 

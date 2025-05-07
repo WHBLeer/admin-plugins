@@ -30,25 +30,25 @@
 						</button>
 						<ul class="dropdown-menu">
 							<li class="settings-btn">
-								<a class="dropdown-item text-success" href="{{ route('plugins.settings.edit', $plugin->getName()) }}">
+								<a class="dropdown-item text-success" href="{{ route('admin.plugins.settings.edit', $plugin->getName()) }}">
 									<i class="ti ti-archive"></i> Settings
 								</a>
 							</li>
 							@if($plugin->isEnabled())
 								<li class="uninstall-btn">
-									<a class="dropdown-item text-warning" href="javascript:;" data-action="{{ route('plugins.uninstall', $plugin->getName()) }}" onclick="uninstallPlugin(this)">
+									<a class="dropdown-item text-warning" href="javascript:;" data-action="{{ route('admin.plugins.uninstall', $plugin->getName()) }}" onclick="uninstallPlugin(this)">
 										<i class="ti ti-trash"></i> Disable
 									</a>
 								</li>
 							@else
 								<li class="install-btn">
-									<a class="dropdown-item text-success" href="javascript:;" data-action="{{ route('plugins.install', $plugin->getName()) }}" onclick="installPlugin(this)">
+									<a class="dropdown-item text-success" href="javascript:;" data-action="{{ route('admin.plugins.install', $plugin->getName()) }}" onclick="installPlugin(this)">
 										<i class="ti ti-trash"></i> Enable
 									</a>
 								</li>
 							@endif
 							<li class="delete-btn">
-								<a class="dropdown-item text-danger" href="javascript:;" data-action="{{ route('plugins.delete', $plugin->getName()) }}" onclick="deletePlugin(this)">
+								<a class="dropdown-item text-danger" href="javascript:;" data-action="{{ route('admin.plugins.delete', $plugin->getName()) }}" onclick="deletePlugin(this)">
 									<i class="ti ti-trash"></i> Delete
 								</a>
 							</li>

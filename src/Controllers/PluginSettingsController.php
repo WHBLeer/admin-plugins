@@ -14,7 +14,7 @@ class PluginSettingsController extends Controller
 			return $this->respond('error', 'Plugin not found!');
 		}
 
-		return view('plugins::admin.settings', compact('plugin'));
+		return view('plugins::settings', compact('plugin'));
 	}
 
 	public function update(Request $request, $plugin)

@@ -12,7 +12,7 @@ class PluginController extends Controller
 	{
 		$plugins = $this->pluginManager->all();
 
-		return view('plugins::admin.index', compact('plugins'));
+		return view('plugins::index', compact('plugins'));
 	}
 
 	public function install($plugin)

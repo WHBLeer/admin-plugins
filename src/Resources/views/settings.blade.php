@@ -1,10 +1,11 @@
-// Resources/views/admin/settings.blade.php
-
-@extends('layouts.admin')
-
+@extends('layout.master')
 @section('title', 'Plugin Settings: ' . $plugin->getTitle())
-
-@section('content')
+@section('css')
+	<!-- glight css -->
+	<link rel="stylesheet" href="{{asset('assets/vendor/glightbox/glightbox.min.css')}}">
+	<link rel="stylesheet" href="{{asset('assets/vendor/plugins/style.css')}}">
+@endsection
+@section('main-content')
 	<div class="container-fluid">
 		<div class="row mb-4">
 			<div class="col-md-6">
@@ -18,7 +19,7 @@
 					<div class="alert alert-success">{{ session('success') }}</div>
 				@endif
 				
-				<form action="{{ route('plugins.settings.update', $plugin->getName()) }}" method="POST">
+				<form action="{{ route('admin.plugins.settings.update', $plugin->getName()) }}" method="POST">
 					@csrf
 					@method('PUT')
 					
@@ -54,7 +55,7 @@
 					@endforeach
 					
 					<button type="submit" class="btn btn-primary">Save Settings</button>
-					<a href="{{ route('plugins.index') }}" class="btn btn-secondary">Back to List</a>
+					<a href="{{ route('admin.plugins.index') }}" class="btn btn-secondary">Back to List</a>
 				</form>
 			</div>
 		</div>
