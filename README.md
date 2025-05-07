@@ -16,15 +16,18 @@ Admin Plugin是一个插件机制解决方案，为需要建立自己的生态�
 ```yml
 "php": "^8.2",
 "ext-zip": "*",
-"laravel/framework": "^11.0"
+"laravel/framework": "^11.0",
+"spatie/laravel-permission": "^6.12",
 ```
 
 
-## installation
+## 安装
 
 * Step 1
 ```shell
 composer require sanlilin/admin-plugin
+php artisan plugins-system:install
+php artisan migrate
 ```
 
 * Step 2
