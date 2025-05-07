@@ -1,18 +1,18 @@
 <?php
-// src/Models/Plugin.php
 
 namespace Sanlilin\AdminPlugins\Models;
 
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
 use Sanlilin\AdminPlugins\Exceptions\PluginException;
 
 class Plugin
 {
-	protected $app;
-	protected $name;
-	protected $path;
-	protected $config;
+	public $app;
+	public $name;
+	public $path;
+	public $config;
 
 	public function __construct($app, $name, $path, $config)
 	{

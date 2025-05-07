@@ -5,9 +5,8 @@ namespace Sanlilin\AdminPlugins\Support;
 
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Config;
+use Sanlilin\AdminPlugins\Models\Plugin;
 use Sanlilin\AdminPlugins\Exceptions\PluginException;
 use ZipArchive;
 
@@ -77,7 +76,7 @@ class PluginManager
 		$plugin = $this->find($name);
 
 		if (!$plugin) {
-			throw new PluginException("Plugin [{$name}] not found!");
+			throw new PluginException::pluginNotFound($name);
 		}
 
 		$this->registerServiceProvider($plugin);
@@ -96,7 +95,7 @@ class PluginManager
 		$plugin = $this->find($name);
 
 		if (!$plugin) {
-			throw new PluginException("Plugin [{$name}] not found!");
+			throw new PluginException::pluginNotFound($name);
 		}
 
 		$this->rollbackMigrations($plugin);
@@ -110,7 +109,7 @@ class PluginManager
 		$plugin = $this->find($name);
 
 		if (!$plugin) {
-			throw new PluginException("Plugin [{$name}] not found!");
+			throw new PluginException::pluginNotFound($name);
 		}
 
 		if ($plugin->isEnabled()) {
@@ -156,7 +155,8 @@ class PluginManager
 
 		if (File::exists($destination)) {
 			File::deleteDirectory($tempPath);
-			throw new PluginException("Plugin [{$pluginName}] already exists");
+			throw new PluginException::pluginAlreadyExists($pluginName);
+
 		}
 
 		File::moveDirectory($tempPath, $destination);

@@ -10,7 +10,7 @@ return [
 	],
 	'cache' => [
 		'enabled' => false,
-		'key' => 'laravel-plugins',
+		'key' => 'admin-plugins',
 		'lifetime' => 86400,
 	],
 ];
