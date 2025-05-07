@@ -1,5 +1,4 @@
 <?php
-// src/Support/PluginGenerator.php
 
 namespace Sanlilin\AdminPlugins\Support;
 

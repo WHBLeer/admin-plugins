@@ -1,5 +1,4 @@
 <?php
-// src/Providers/PluginServiceProvider.php
 
 namespace Sanlilin\AdminPlugins\Providers;
 

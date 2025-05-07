@@ -40,6 +40,18 @@ class Plugin
 		return $this->config;
 	}
 
+	public function setConfig($config=[])
+	{
+		// 合并配置
+		$newConfig = array_merge($this->config, $config);
+		$configPath = $this->path . '/plugin.json';
+		File::put($configPath, json_encode($newConfig, JSON_PRETTY_PRINT));
+		// 更新当前对象的 config 属性
+		$this->config = $newConfig;
+
+		return $this->config;
+	}
+
 	public function getLowerName()
 	{
 		return strtolower($this->name);
@@ -48,6 +60,11 @@ class Plugin
 	public function getStudlyName()
 	{
 		return Str::studly($this->name);
+	}
+
+	public function getSlugName()
+	{
+		return Str::slug($this->name);
 	}
 
 	public function getTitle()
@@ -97,7 +114,7 @@ class Plugin
 		$this->saveConfig();
 	}
 
-	protected function saveConfig()
+	public function saveConfig()
 	{
 		$configPath = $this->path . '/plugin.json';
 		File::put($configPath, json_encode($this->config, JSON_PRETTY_PRINT));

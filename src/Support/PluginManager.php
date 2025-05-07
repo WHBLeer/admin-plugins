@@ -1,5 +1,4 @@
 <?php
-// src/Support/PluginManager.php
 
 namespace Sanlilin\AdminPlugins\Support;
 
@@ -9,6 +8,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Artisan;
 use Sanlilin\AdminPlugins\Models\Plugin;
+use Illuminate\Contracts\Foundation\Application;
 use Sanlilin\AdminPlugins\Exceptions\PluginException;
 use ZipArchive;
 
@@ -18,7 +18,7 @@ class PluginManager
 	protected $pluginsPath;
 	protected $plugins = [];
 
-	public function __construct($app)
+	public function __construct(Application $app)
 	{
 		$this->app = $app;
 		$this->pluginsPath = base_path('plugins');

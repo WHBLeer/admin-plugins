@@ -3,20 +3,11 @@
 namespace Sanlilin\AdminPlugins\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
-use Sanlilin\AdminPlugins\Support\PluginManager;
 use Illuminate\Support\Facades\Storage;
 use ZipArchive;
 
 class PluginController extends Controller
 {
-	protected $pluginManager;
-
-	public function __construct(PluginManager $pluginManager)
-	{
-		$this->pluginManager = $pluginManager;
-	}
-
 	public function index()
 	{
 		$plugins = $this->pluginManager->all();
@@ -30,14 +21,13 @@ class PluginController extends Controller
 			$plugin = $this->pluginManager->find($plugin);
 
 			if (!$plugin) {
-				return redirect()->back()->with('error', 'Plugin not found!');
+				return $this->respond('error', 'Plugin not found!');
 			}
 
 			$this->pluginManager->install($plugin->getName());
-
-			return redirect()->back()->with('success', "Plugin [{$plugin->getName()}] installed successfully!");
+			return $this->respond('success', "Plugin [{$plugin->getName()}] installed successfully!", ['plugin' => $plugin->getName()]);
 		} catch (\Exception $e) {
-			return redirect()->back()->with('error', $e->getMessage());
+			return $this->respond('error', $e->getMessage());
 		}
 	}
 
@@ -47,14 +37,14 @@ class PluginController extends Controller
 			$plugin = $this->pluginManager->find($plugin);
 
 			if (!$plugin) {
-				return redirect()->back()->with('error', 'Plugin not found!');
+				return $this->respond('error', 'Plugin not found!');
 			}
 
 			$this->pluginManager->uninstall($plugin->getName());
 
-			return redirect()->back()->with('success', "Plugin [{$plugin->getName()}] uninstalled successfully!");
+			return $this->respond('success', "Plugin [{$plugin->getName()}] uninstalled successfully!", ['plugin' => $plugin->getName()]);
 		} catch (\Exception $e) {
-			return redirect()->back()->with('error', $e->getMessage());
+			return $this->respond('error', $e->getMessage());
 		}
 	}
 
@@ -64,14 +54,14 @@ class PluginController extends Controller
 			$plugin = $this->pluginManager->find($plugin);
 
 			if (!$plugin) {
-				return redirect()->back()->with('error', 'Plugin not found!');
+				return $this->respond('error', 'Plugin not found!');
 			}
 
 			$this->pluginManager->restart($plugin->getName());
 
-			return redirect()->back()->with('success', "Plugin [{$plugin->getName()}] restarted successfully!");
+			return $this->respond('success', "Plugin [{$plugin->getName()}] restarted successfully!", ['plugin' => $plugin->getName()]);
 		} catch (\Exception $e) {
-			return redirect()->back()->with('error', $e->getMessage());
+			return $this->respond('error', $e->getMessage());
 		}
 	}
 	public function upload(Request $request)
@@ -89,9 +79,9 @@ class PluginController extends Controller
 			// 安装完成后删除上传的 zip 文件
 			Storage::delete($path);
 
-			return redirect()->back()->with('success', "Plugin [{$plugin->getName()}] installed successfully!");
+			return $this->respond('success', "Plugin [{$plugin->getName()}] installed successfully!", ['plugin' => $plugin->getName()]);
 		} catch (\Exception $e) {
-			return redirect()->back()->with('error', $e->getMessage());
+			return $this->respond('error', $e->getMessage());
 		}
 	}
 
@@ -100,23 +90,23 @@ class PluginController extends Controller
 		$plugin = $this->pluginManager->find($plugin);
 
 		if (!$plugin) {
-			return redirect()->back()->with('error', 'Plugin not found!');
+			return $this->respond('error', 'Plugin not found!');
 		}
 
 		// 插件目录路径
-		$pluginPath = base_path('plugins/' . $plugin);
+		$pluginPath = base_path('plugins/' . $plugin->getName());
 
 		// 检查插件是否存在
 		if (!is_dir($pluginPath)) {
-			return redirect()->back()->with('error', "Plugin [{$plugin}] does not exist!");
+			return $this->respond('error', "Plugin [{$plugin->getName()}] does not exist!");
 		}
 
 		// 创建 Zip 文件
-		$zipFileName = sys_get_temp_dir() . '/' . $plugin . '.zip';
+		$zipFileName = sys_get_temp_dir() . '/' . $plugin->getSlugName() . '.zip';
 		$zip = new ZipArchive();
 
 		if ($zip->open($zipFileName, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
-			return redirect()->back()->with('error', 'Failed to create zip file.');
+			return $this->respond('error', 'Failed to create zip file.');
 		}
 
 		$files = new \RecursiveIteratorIterator(
@@ -146,17 +136,17 @@ class PluginController extends Controller
 			$plugin = $this->pluginManager->find($plugin);
 
 			if (!$plugin) {
-				return redirect()->back()->with('error', 'Plugin not found!');
+				return $this->respond('error', 'Plugin not found!');
 			}
 
 			$this->pluginManager->delete($plugin->getName());
 
 			// 删除插件目录
-			Storage::deleteDirectory('plugins/' . $plugin);
+			Storage::deleteDirectory('plugins/' . $plugin->getName());
 
-			return redirect()->back()->with('success', "Plugin [{$plugin->getName()}] deleted successfully!");
+			return $this->respond('success', "Plugin [{$plugin->getName()}] deleted successfully!", ['plugin' => $plugin->getName()]);
 		} catch (\Exception $e) {
-			return redirect()->back()->with('error', $e->getMessage());
+			return $this->respond('error', $e->getMessage());
 		}
 	}
 }
