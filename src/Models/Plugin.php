@@ -32,8 +32,11 @@ class Plugin
 		return $this->path;
 	}
 
-	public function getConfig()
+	public function getConfig($key='')
 	{
+		if ($key) {
+			return $this->config[$key] ?? [];
+		}
 		return $this->config;
 	}
 

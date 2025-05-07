@@ -37,6 +37,10 @@ class PluginServiceProvider extends ServiceProvider
 		], 'plugins-config');
 
 		$this->publishes([
+			__DIR__.'/../Resources/assets' => public_path('assets/vendor/plugins'),
+		], 'plugins-assets');
+
+		$this->publishes([
 			__DIR__.'/../Resources/views' => resource_path('views/vendor/plugins'),
 		], 'plugins-views');
 
@@ -57,9 +61,7 @@ class PluginServiceProvider extends ServiceProvider
 
 	protected function loadMigrations()
 	{
-		if (file_exists(__DIR__.'/../database/migrations')) {
-			$this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
-		}
+		$this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
 	}
 
 	protected function loadTranslations()

@@ -3,6 +3,8 @@
 
 namespace Sanlilin\AdminPlugins\Support;
 
+use App\Models\Role;
+use App\Models\Permission;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Artisan;
@@ -84,6 +86,7 @@ class PluginManager
 
 		$this->publishAssets($plugin);
 		$this->runMigrations($plugin);
+		$this->syncPermissions($plugin);
 
 		$plugin->enable();
 
@@ -98,6 +101,7 @@ class PluginManager
 			throw PluginException::pluginNotFound($name);
 		}
 
+		$this->cleanupPermissions($plugin);
 		$this->rollbackMigrations($plugin);
 		$plugin->disable();
 
@@ -228,6 +232,55 @@ class PluginManager
 				'--force' => true,
 			]);
 		}
+	}
+
+	protected function syncPermissions(Plugin $plugin)
+	{
+		if (!class_exists(Permission::class) || !class_exists(Role::class)) {
+			return;
+		}
+
+		$permissions = $plugin->getConfig('permissions');
+
+		if (empty($permissions)) {
+			return;
+		}
+
+		// 创建权限
+		foreach ($permissions as $permission) {
+			Permission::firstOrCreate([
+				'name' => $permission,
+				'guard_name' => 'admin'
+			]);
+		}
+
+		// 同步到管理员角色
+		$adminRole = Role::where('name', 'admin')->first();
+		if ($adminRole) {
+			$adminRole->givePermissionTo($permissions);
+		}
+	}
+
+	protected function cleanupPermissions(Plugin $plugin)
+	{
+		if (!class_exists(Permission::class) || !class_exists(Role::class)) {
+			return;
+		}
+
+		$permissions = $plugin->getConfig('permissions');
+
+		if (empty($permissions)) {
+			return;
+		}
+
+		// 从管理员角色移除权限
+		$adminRole = Role::where('name', 'admin')->first();
+		if ($adminRole) {
+			$adminRole->revokePermissionTo($permissions);
+		}
+
+		// 删除权限
+		Permission::whereIn('name', $permissions)->delete();
 	}
 
 	public function getPluginPath($name)

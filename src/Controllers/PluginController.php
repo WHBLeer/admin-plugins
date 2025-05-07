@@ -14,6 +14,8 @@ class PluginController extends Controller
 
 	public function __construct(PluginManager $pluginManager)
 	{
+		$this->middleware('can:plugins.manage')->except(['index', 'show']);
+		$this->middleware('can:plugins.view')->only(['index', 'show']);
 		$this->pluginManager = $pluginManager;
 	}
 
