@@ -29,8 +29,6 @@ class PluginServiceProvider extends ServiceProvider
 		$this->loadRoutes();
 		$this->loadViews();
 		$this->loadTranslations();
-
-		$this->ensurePermissionsCreated();
 	}
 
 	protected function registerPublishes()
@@ -62,83 +60,6 @@ class PluginServiceProvider extends ServiceProvider
 	protected function loadTranslations()
 	{
 		$this->loadTranslationsFrom(__DIR__.'/../Resources/lang', 'plugins');
-	}
-
-	protected function ensurePermissionsCreated()
-	{
-		// 只在控制台运行或首次安装时执行
-		if (!$this->app->runningInConsole() && Permission::where('name', 'plugins.manage')->exists()) {
-			return;
-		}
-		$system = Permission::firstOrCreate([
-			'name' => 'system',
-			'guard_name' => 'admin',
-			'display_name' => '系统管理',
-			'icon' => 'fas fa-cog',
-		]);
-		$parent = Permission::firstOrCreate([
-			'name' => 'plugins.manage',
-			'guard_name' => 'admin',
-			'display_name' => '插件',
-			'icon' => 'ph-duotone  ph-squares-four',
-			'parent_id' => $system->id,
-		]);
-		$permissions = [
-			[
-				'name' => 'plugins.view',
-				'guard_name' => 'admin',
-				'display_name' => '插件管理',
-				'icon' => 'ph-duotone  ph-squares-four',
-				'route' => 'admin.plugins.index',
-				'parent_id' => $parent->id,
-			],
-			[
-				'name' => 'plugins.install',
-				'guard_name' => 'admin',
-				'display_name' => '插件安装',
-				'icon' => 'ph-duotone  ph-squares-four',
-				'route' => 'admin.plugins.install',
-				'parent_id' => $parent->id,
-			],
-			[
-				'name' => 'plugins.uninstall',
-				'guard_name' => 'admin',
-				'display_name' => '插件卸载',
-				'icon' => 'ph-duotone  ph-squares-four',
-				'route' => 'admin.plugins.uninstall',
-				'parent_id' => $parent->id,
-			],
-			[
-				'name' => 'plugins.delete',
-				'guard_name' => 'admin',
-				'display_name' => '插件删除',
-				'icon' => 'ph-duotone  ph-squares-four',
-				'route' => 'admin.plugins.delete',
-				'parent_id' => $parent->id,
-			],
-			[
-				'name' => 'plugins.settings',
-				'guard_name' => 'admin',
-				'display_name' => '插件配置',
-				'icon' => 'ph-duotone  ph-squares-four',
-				'route' => 'admin.plugins.settings',
-				'parent_id' => $parent->id,
-			],
-		];
-
-		foreach ($permissions as $permission) {
-			Permission::firstOrCreate($permission);
-		}
-
-		// 确保管理员角色存在
-		$superAdmin = Role::firstOrCreate([
-			'name' => 'Super Admin',
-			'guard_name' => 'admin',
-			'description' => '超级管理员',
-		]);
-
-		// 分配权限
-		$superAdmin->givePermissionTo(Permission::all());
 	}
 
 	protected function registerCommands()
