@@ -9,7 +9,7 @@ class DummyClass extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(
-            __DIR__.'/../config.php', 'DummyName'
+            __DIR__.'/../config.php', 'DummySlug'
         );
         $this->registerCommands();
     }
@@ -17,13 +17,13 @@ class DummyClass extends ServiceProvider
     public function boot()
     {
         $this->loadRoutesFrom(__DIR__.'/../Routes/web.php');
-        $this->loadViewsFrom(__DIR__.'/../Resources/views', 'DummyName');
-        $this->loadTranslationsFrom(__DIR__.'/../Resources/lang', 'DummyName');
+        $this->loadViewsFrom(__DIR__.'/../Resources/views', 'DummySlug');
+        $this->loadTranslationsFrom(__DIR__.'/../Resources/lang', 'DummySlug');
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../Assets' => public_path('vendor/DummyName'),
-            ], 'DummyName-assets');
+                __DIR__.'/../Assets' => public_path('vendor/DummySlug'),
+            ], 'DummySlug-assets');
         }
     }
 
