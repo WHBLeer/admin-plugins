@@ -139,7 +139,7 @@ class PluginGenerator
 		$stub = File::get($this->stubsPath . '/provider/provider.stub');
 		$content = str_replace(
 			['DummyNamespace', 'DummyClass', 'DummyName', 'DummyCommandClass'],
-			[$this->getNamespace(), $this->getStudlyName() . 'ServiceProvider',$this->getSlugName(),'\\Plugins\\'.$this->getStudlyName().'\\Commands\\'.$this->getStudlyName().'Command'],
+			[$this->getNamespace(), $this->getStudlyName() . 'ServiceProvider',$this->getStudlyName(),'\\Plugins\\'.$this->getStudlyName().'\\Commands\\'.$this->getStudlyName().'Command'],
 			$stub
 		);
 
@@ -154,7 +154,7 @@ class PluginGenerator
 		$stub = File::get($this->stubsPath . '/provider/route-provider.stub');
 		$content = str_replace(
 			['DummyNamespace', 'DummyClass', 'DummyName'],
-			[$this->getNamespace(), 'RouteServiceProvider',$this->getSlugName()],
+			[$this->getNamespace(), 'RouteServiceProvider',$this->getStudlyName()],
 			$stub
 		);
 
