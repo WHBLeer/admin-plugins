@@ -30,7 +30,7 @@ class DummyClass extends ServiceProvider
 	protected function registerCommands()
 	{
 		$this->commands([
-			\Plugins\DummyCommandClass\Commands\DummyClassCommand::class,
+			DummyCommandClass::class,
 		]);
 	}
 }

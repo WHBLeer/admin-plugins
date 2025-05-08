@@ -1,6 +1,7 @@
 <?php
 use Illuminate\Support\Facades\Route;
 use DummyNamespace\Http\Controllers\DummyClass;
+use DummyNamespace\Http\Controllers\DummyConfigClass;
 
 /*
 |--------------------------------------------------------------------------

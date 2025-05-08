@@ -3,6 +3,7 @@
 namespace DummyNamespace\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Sanlilin\AdminPlugins\Controllers\Controller;
 use Sanlilin\AdminPlugins\Exceptions\PluginException;
 
@@ -13,12 +14,11 @@ class DummyClass extends Controller
 		$plugin = $this->find('DummyName');
 
 		if (!$plugin) {
-			throw PluginException::pluginNotFound($name);
+			throw PluginException::pluginNotFound('DummyName');
 		}
-		$config => config('DummySlug');
         return view('DummySlug::config', [
             'plugin' => $plugin,
-            'config' => $config,
+            'config' => config('DummySlug')
         ]);
     }
 

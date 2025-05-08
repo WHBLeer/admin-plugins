@@ -60,14 +60,15 @@ class PluginGenerator
 		$this->createLang();
 		$this->createRoute();
 		$this->createMigration();
+		$this->createCommand();
 	}
 
 	protected function createPluginJson()
 	{
 		$stub = File::get($this->stubsPath . '/plugin.json.stub');
 		$content = str_replace(
-			['DummyNamespace', 'DummyName', 'DummyTitle'],
-			[$this->getNamespace(), $this->name, $this->getTitle()],
+			['DummyNamespace', 'DummyClass', 'DummyName', 'DummyTitle'],
+			[$this->getNamespace(true), $this->getStudlyName(),$this->name, $this->getTitle()],
 			$stub
 		);
 
@@ -135,8 +136,8 @@ class PluginGenerator
 	{
 		$stub = File::get($this->stubsPath . '/PluginServiceProvider.stub');
 		$content = str_replace(
-			['DummyNamespace', 'DummyClass','DummyCommandClass'],
-			[$this->getNamespace(), $this->getStudlyName() . 'ServiceProvider','\\Plugins\\'.$this->getStudlyName().'\\Commands\\'.$this->getStudlyName().'Command'],
+			['DummyNamespace', 'DummyClass', 'DummyName', 'DummyCommandClass'],
+			[$this->getNamespace(), $this->getStudlyName() . 'ServiceProvider',$this->getSlugName(),'\\Plugins\\'.$this->getStudlyName().'\\Commands\\'.$this->getStudlyName().'Command'],
 			$stub
 		);
 
@@ -179,7 +180,7 @@ class PluginGenerator
 		$files = File::files($stubPath);
 
 		foreach ($files as $file) {
-			$fileName = pathinfo($file, PATHINFO_BASENAME, '.stub'); // 获取不带扩展名的文件名
+			$fileName = basename($file, '.stub'); // 获取不带 .stub 的文件名
 			$stubContent = File::get($file);
 
 			// 替换占位符
@@ -237,8 +238,11 @@ class PluginGenerator
 		File::put($commandPath . '/' . $commandFile, $content);
 	}
 
-	protected function getNamespace()
+	protected function getNamespace($str=false)
 	{
+		if ($str) {
+			return "Plugins\\\\" . $this->getStudlyName();
+		}
 		return 'Plugins\\' . $this->getStudlyName();
 	}
 
