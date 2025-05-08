@@ -215,7 +215,7 @@ class PluginGenerator
 	protected function createRoute()
 	{
 		$stubPath = $this->stubsPath . '/route';
-		$routePath = $this->pluginPath . '/Route';
+		$routePath = $this->pluginPath . '/Routes';
 
 		// 遍历所有 .stub 文件
 		$files = File::files($stubPath);
