@@ -3,22 +3,28 @@
 namespace DummyNamespace\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use Sanlilin\AdminPlugins\Controllers\Controller;
+use Sanlilin\AdminPlugins\Exceptions\PluginException;
 
-class ConfigController extends Controller
+class DummyClass extends Controller
 {
     public function edit()
     {
-        $this->authorize('configure', 'DummyName');
+		$plugin = $this->find('DummyName');
 
-        return view('DummyName::config', [
-            'config' => config('article-plugin')
+		if (!$plugin) {
+			throw PluginException::pluginNotFound($name);
+		}
+		$config => config('DummySlug');
+        return view('DummySlug::config', [
+            'plugin' => $plugin,
+            'config' => $config,
         ]);
     }
 
     public function update(Request $request)
     {
-        $this->authorize('configure', 'DummyName');
+        $plugin = $this->find('DummyName');
 
         $validated = $request->validate([
             'per_page' => 'required|integer|min:1|max:100',
@@ -37,7 +43,6 @@ class ConfigController extends Controller
         // 清除配置缓存
         Artisan::call('config:clear');
 
-        return redirect()->back()
-            ->with('success', '配置已更新');
+		return $this->respond('success', "Plugin [{$plugin->getName()}] config updated successfully!", ['plugin' => $plugin->getName()]);
     }
 }

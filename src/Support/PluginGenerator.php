@@ -35,6 +35,7 @@ class PluginGenerator
 		$folders = [
 			'Database/Migrations',
 			'Http/Controllers',
+			'Commands',
 			'Models',
 			'Resources/views',
 			'Resources/lang',
@@ -50,12 +51,14 @@ class PluginGenerator
 	protected function createFiles()
 	{
 		$this->createPluginJson();
+		$this->createConfig();
 		$this->createController();
 		$this->createConfigController();
 		$this->createServiceProvider();
-		$this->createConfigView();
-		$this->createDefaultView();
-		$this->createRoutesFile();
+		$this->createModel();
+		$this->createView();
+		$this->createLang();
+		$this->createRoute();
 		$this->createMigration();
 	}
 
@@ -63,20 +66,32 @@ class PluginGenerator
 	{
 		$stub = File::get($this->stubsPath . '/plugin.json.stub');
 		$content = str_replace(
-			['DummyName', 'DummyNamespace', 'DummyTitle'],
-			[$this->name, $this->getNamespace(), $this->getTitle()],
+			['DummyNamespace', 'DummyName', 'DummyTitle'],
+			[$this->getNamespace(), $this->name, $this->getTitle()],
 			$stub
 		);
 
 		File::put($this->pluginPath . '/plugin.json', $content);
 	}
 
+	protected function createConfig()
+	{
+		$stub = File::get($this->stubsPath . '/config.php.stub');
+		$content = str_replace(
+			['DummyTitle', 'DummySlug'],
+			[$this->getTitle(), $this->getSlugName()],
+			$stub
+		);
+
+		File::put($this->pluginPath . '/config.php', $content);
+	}
+
 	protected function createController()
 	{
 		$stub = File::get($this->stubsPath . '/controller.stub');
 		$content = str_replace(
-			['DummyNamespace', 'DummyClass', 'DummyName'],
-			[$this->getNamespace(), $this->getStudlyName() . 'Controller', $this->name],
+			['DummyNamespace', 'DummyClass', 'DummyName', 'DummyModel', 'DummySlug'],
+			[$this->getNamespace(), $this->getStudlyName() . 'Controller', $this->name, $this->getStudlyName(),$this->getSlugName()],
 			$stub
 		);
 
@@ -90,8 +105,8 @@ class PluginGenerator
 	{
 		$stub = File::get($this->stubsPath . '/ConfigController.stub');
 		$content = str_replace(
-			['DummyNamespace', 'DummyName'],
-			[$this->getNamespace(), $this->name],
+			['DummyNamespace', 'DummyClass', 'DummyName', 'DummySlug'],
+			[$this->getNamespace(), $this->getStudlyName() . 'ConfigController', $this->name, $this->getSlugName()],
 			$stub
 		);
 
@@ -101,12 +116,27 @@ class PluginGenerator
 		);
 	}
 
+	protected function createModel()
+	{
+		$stub = File::get($this->stubsPath . '/model.stub');
+		$content = str_replace(
+			['DummyNamespace', 'DummyClass', 'DummyTable'],
+			[$this->getNamespace(), $this->getStudlyName(), $this->getSlugName()],
+			$stub
+		);
+
+		File::put(
+			$this->pluginPath . '/Models/' . $this->getStudlyName() .'.php',
+			$content
+		);
+	}
+
 	protected function createServiceProvider()
 	{
 		$stub = File::get($this->stubsPath . '/PluginServiceProvider.stub');
 		$content = str_replace(
-			['DummyNamespace', 'DummyClass'],
-			[$this->getNamespace(), $this->getStudlyName() . 'ServiceProvider'],
+			['DummyNamespace', 'DummyClass','DummyCommandClass'],
+			[$this->getNamespace(), $this->getStudlyName() . 'ServiceProvider','\\Plugins\\'.$this->getStudlyName().'\\Commands\\'.$this->getStudlyName().'Command'],
 			$stub
 		);
 
@@ -116,42 +146,60 @@ class PluginGenerator
 		);
 	}
 
-	protected function createConfigView()
+	protected function createView()
 	{
-		$stub = File::get($this->stubsPath . '/view/config.stub');
-		$content = str_replace(
-			['DummySlug'],
-			[$this->getSlugName()],
-			$stub
-		);
+		$stubPath = $this->stubsPath . '/view';
+		$viewPath = $this->pluginPath . '/Resources/views';
 
-		File::put(
-			$this->pluginPath . '/Resources/views/config.blade.php',
-			$content
-		);
+		// 遍历所有 .stub 文件
+		$files = File::files($stubPath);
+
+		foreach ($files as $file) {
+			$fileName = pathinfo($file, PATHINFO_BASENAME, '.stub'); // 获取不带扩展名的文件名
+			$stubContent = File::get($file);
+
+			// 替换占位符
+			$content = str_replace(
+				['DummyName','DummySlug'],
+				[$this->name, $this->getSlugName()],
+				$stubContent
+			);
+
+			// 写入到目标路径
+			File::put($viewPath . DIRECTORY_SEPARATOR . $fileName . '.blade.php', $content);
+		}
 	}
 
-	protected function createDefaultView()
+	protected function createLang()
 	{
-		$stub = File::get($this->stubsPath . '/view/index.stub');
-		$content = str_replace(
-			['DummySlug'],
-			[$this->getSlugName()],
-			$stub
-		);
+		$stubPath = $this->stubsPath . '/lang';
+		$viewPath = $this->pluginPath . '/Resources/lang';
 
-		File::put(
-			$this->pluginPath . '/Resources/views/index.blade.php',
-			$content
-		);
+		// 遍历所有 .stub 文件
+		$files = File::files($stubPath);
+
+		foreach ($files as $file) {
+			$fileName = pathinfo($file, PATHINFO_BASENAME, '.stub'); // 获取不带扩展名的文件名
+			$stubContent = File::get($file);
+
+			// 替换占位符
+			$content = str_replace(
+				['DummyName'],
+				[$this->name],
+				$stubContent
+			);
+
+			// 写入到目标路径
+			File::put($viewPath . DIRECTORY_SEPARATOR . $fileName . '.php', $content);
+		}
 	}
 
-	protected function createRoutesFile()
+	protected function createRoute()
 	{
 		$stub = File::get($this->stubsPath . '/route.stub');
 		$content = str_replace(
-			['DummyNamespace', 'DummyClass', 'DummySlug'],
-			[$this->getNamespace(), $this->getStudlyName() . 'Controller', $this->getSlugName()],
+			['DummyNamespace', 'DummyClass', 'DummyConfigClass', 'DummySlug'],
+			[$this->getNamespace(), $this->getStudlyName() . 'Controller', $this->getStudlyName() . 'ConfigController', $this->getSlugName()],
 			$stub
 		);
 
@@ -174,6 +222,19 @@ class PluginGenerator
 		$migrationFile = date('Y_m_d_His') . '_create_' . $this->getSlugName() . '.php';
 
 		File::put($migrationPath . '/' . $migrationFile, $content);
+	}
+	protected function createCommand()
+	{
+		$stub = File::get($this->stubsPath . '/command.stub');
+		$content = str_replace(
+			['DummyNamespace','DummyClass','DummySlug'],
+			[$this->getNamespace(),$this->getStudlyName().'Command',$this->getSlugName()],
+			$stub
+		);
+		$commandPath = $this->pluginPath . '/Commands';
+		$commandFile = $this->getStudlyName().'Command.php';
+
+		File::put($commandPath . '/' . $commandFile, $content);
 	}
 
 	protected function getNamespace()

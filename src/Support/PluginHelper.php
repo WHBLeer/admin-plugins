@@ -2,6 +2,39 @@
 /*
 * Define your helper functions in this file to be used globally
 */
+
+
+if (!function_exists('plugin_path')) {
+	/**
+	 * 获取插件目录
+	 * @param string $fileName
+	 * @return string
+	 *
+	 * @author: hongbinwang
+	 * @time  : 2023/8/21 17:37
+	 */
+	function plugin_path(string $fileName = ''): string
+	{
+		return base_path('plugins'.DIRECTORY_SEPARATOR.$fileName);
+	}
+}
+
+if (!function_exists('plugin_config')) {
+	/**
+	 * 获取插件配置
+	 * @param string $pluginName
+	 * @return string
+	 *
+	 * @author: hongbinwang
+	 * @time  : 2023/8/21 17:37
+	 */
+	function plugin_config(string $pluginName = ''): string
+	{
+		$plugin = app('plugins')->find($pluginName);
+		return $plugin->getConfig();
+	}
+}
+
 if (!function_exists('plugin_cover')) {
 	/**
 	 * 获取插件封面图

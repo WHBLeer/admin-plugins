@@ -1,5 +1,5 @@
 @extends('layout.master')
-@section('title', 'Plugin Settings')
+@section('title', 'DummyName')
 @section('css')
     <link rel="stylesheet" href="{{asset('assets/vendor/DummySlug/style.css')}}">
 @endsection

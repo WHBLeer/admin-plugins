@@ -4,13 +4,14 @@ namespace DummyNamespace;
 
 use Illuminate\Support\ServiceProvider;
 
-class DummyClassServiceProvider extends ServiceProvider
+class DummyClass extends ServiceProvider
 {
     public function register()
     {
         $this->mergeConfigFrom(
-            __DIR__.'/../Config/config.php', 'DummyName'
+            __DIR__.'/../config.php', 'DummyName'
         );
+        $this->registerCommands();
     }
 
     public function boot()
@@ -25,4 +26,11 @@ class DummyClassServiceProvider extends ServiceProvider
             ], 'DummyName-assets');
         }
     }
+
+	protected function registerCommands()
+	{
+		$this->commands([
+			\Plugins\DummyCommandClass\Commands\DummyClassCommand::class,
+		]);
+	}
 }

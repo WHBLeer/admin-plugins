@@ -8,14 +8,25 @@ use DummyNamespace\Http\Controllers\DummyClass;
 |--------------------------------------------------------------------------
 */
 
-Route::prefix('DummySlug')->group(function() {
-    Route::get('/', [DummyClass::class,'index']);
+//  Fronted Routes
+Route::middleware(['web'])->prefix('DummySlug')->as('DummySlug.')->group(function () {
+	Route::get('/', [DummyClass::class, 'index'])->name('index');
+	Route::get('/{id}/show', [DummyClass::class, 'show'])->name('show');
 });
 
-Route::prefix('admin/DummySlug')->name('admin.DummySlug.')->middleware('auth:admin')->group(function() {
-    Route::get('/', [DummyClass::class,'index']);
+//  Backend Routes
+Route::middleware(['web'])->prefix('admin')->as('admin.')->group(function () {
+	Route::middleware(['auth:admin'])->prefix('DummySlug')->as('DummySlug.')->group(function () {
+		Route::get('/', [DummyClass::class, 'index'])->name('index');
+		Route::get('/create', [DummyClass::class, 'create'])->name('create');
+		Route::post('/store', [DummyClass::class, 'store'])->name('store');
+		Route::get('/{id}/show', [DummyClass::class, 'show'])->name('show');
+		Route::get('/{id}/edit', [DummyClass::class, 'edit'])->name('edit');
+		Route::put('/{id}/update', [DummyClass::class, 'update'])->name('update');
+		Route::post('/{id}/destroy',[DummyClass::class, 'destroy'])->name('destroy');
 
-    //  Config
-    Route::get('/config', [DummyClassConfigController::class,'edit'])->name('config.edit');
-    Route::post('/config', [DummyClassConfigController::class,'update'])->name('config.update');
+		//  Config
+		Route::get('/config', [DummyConfigClass::class,'edit'])->name('config.edit');
+		Route::post('/config', [DummyConfigClass::class,'update'])->name('config.update');
+	});
 });

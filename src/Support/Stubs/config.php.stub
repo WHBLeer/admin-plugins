@@ -1,0 +1,21 @@
+<?php
+
+return [
+	'cache' => [
+		'enabled' => false,
+		'key' => 'plugin-DummySlug',
+		'lifetime' => 86400,
+	],
+
+    "permissions" => [
+    	[
+			"name" => "DummySlug.manage",
+			"guard_name" => "admin",
+			"display_name" => "DummyTitle",
+			"icon" => "ph-duotone  ph-shapes",
+			"route" => "admin.DummySlug.index",
+			"parent_id" => null,
+    	],
+    	//...
+	]
+];

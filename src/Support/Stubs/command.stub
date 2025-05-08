@@ -1,0 +1,22 @@
+<?php
+
+namespace DummyNamespace\Console\Commands;
+
+use Illuminate\Console\Command;
+
+class DummyClass extends Command
+{
+    protected $signature = 'DummySlug:command';
+
+    protected $description = 'Command description';
+
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    public function handle()
+    {
+        $this->info('Command executed successfully.');
+    }
+}

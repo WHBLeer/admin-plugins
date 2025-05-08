@@ -6,5 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class DummyClass extends Model
 {
+    protected $table = 'DummyTable';
+
     protected $fillable = [];
+
+    protected $hidden = [];
+
+    protected $casts = [];
+
 }

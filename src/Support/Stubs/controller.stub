@@ -2,12 +2,46 @@
 
 namespace DummyNamespace\Http\Controllers;
 
-use Illuminate\Routing\Controller;
+use Sanlilin\AdminPlugins\Controllers\Controller;
+use Sanlilin\AdminPlugins\Exceptions\PluginException;
 
 class DummyClass extends Controller
 {
     public function index()
 	{
-		return view('DummyName::index');
+		return view('DummySlug::index');
+	}
+
+	public function create()
+	{
+		return view('DummySlug::create');
+	}
+
+	public function store(Request $request)
+	{
+		//
+		return $this->respond('success', "created successfully!");
+	}
+
+	public function show(DummyModel $DummyModel)
+	{
+		return view('DummySlug::show', compact('DummyModel'));
+	}
+
+	public function edit(DummyModel $DummyModel)
+	{
+		return view('DummySlug::edit', compact('DummyModel'));
+	}
+
+	public function update(Request $request, DummyModel $DummyModel)
+	{
+		//
+		return $this->respond('success', "updated successfully!");
+	}
+
+	public function destroy(DummyModel $DummyModel)
+	{
+		//
+		return $this->respond('success', "destroyed successfully!");
 	}
 }
