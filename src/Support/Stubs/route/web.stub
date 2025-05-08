@@ -1,0 +1,15 @@
+<?php
+use Illuminate\Support\Facades\Route;
+use DummyNamespace\Http\Controllers\DummyClass;
+use DummyNamespace\Http\Controllers\DummyConfigClass;
+
+/*
+|--------------------------------------------------------------------------
+| Fronted Routes
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware(['web'])->prefix('DummySlug')->as('DummySlug.')->group(function () {
+	Route::get('/', [DummyClass::class, 'index'])->name('index');
+	Route::get('/{id}/show', [DummyClass::class, 'show'])->name('show');
+});

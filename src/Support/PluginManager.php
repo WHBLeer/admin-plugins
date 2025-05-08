@@ -183,9 +183,19 @@ class PluginManager
 
 	protected function registerServiceProvider(Plugin $plugin)
 	{
-		if (isset($plugin->config['provider'])) {
-			$this->app->register($plugin->config['provider']);
+		if (!isset($plugin->config['provider'])) {
+			return;
 		}
+
+		$provider = $plugin->config['provider'];
+
+		if (!class_exists($provider)) {
+			throw new \RuntimeException(
+				"Unable to register plugin provider [{$provider}]. Class not found."
+			);
+		}
+
+		$this->app->register($provider);
 	}
 
 	protected function bootServiceProvider(Plugin $plugin)

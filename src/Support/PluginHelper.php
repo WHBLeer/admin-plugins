@@ -7,18 +7,20 @@
 if (!function_exists('plugin_path')) {
 	/**
 	 * 获取插件目录
-	 * @param string $fileName
+	 * @param string $pluginName
+	 * @param string $path
 	 * @return string
 	 *
 	 * @author: hongbinwang
 	 * @time  : 2023/8/21 17:37
 	 */
-	function plugin_path(string $fileName = ''): string
+	function plugin_path(string $pluginName, string $path = ''): string
 	{
-		return base_path('plugins'.DIRECTORY_SEPARATOR.$fileName);
+		$plugin = app('plugins')->find($pluginName);
+
+		return $plugin->getPath().($path ? DIRECTORY_SEPARATOR.$path : $path);
 	}
 }
-
 if (!function_exists('plugin_config')) {
 	/**
 	 * 获取插件配置

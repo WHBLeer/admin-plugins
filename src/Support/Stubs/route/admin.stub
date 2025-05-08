@@ -5,17 +5,10 @@ use DummyNamespace\Http\Controllers\DummyConfigClass;
 
 /*
 |--------------------------------------------------------------------------
-| Plugin Routes
+| Backend Routes
 |--------------------------------------------------------------------------
 */
 
-//  Fronted Routes
-Route::middleware(['web'])->prefix('DummySlug')->as('DummySlug.')->group(function () {
-	Route::get('/', [DummyClass::class, 'index'])->name('index');
-	Route::get('/{id}/show', [DummyClass::class, 'show'])->name('show');
-});
-
-//  Backend Routes
 Route::middleware(['web'])->prefix('admin')->as('admin.')->group(function () {
 	Route::middleware(['auth:admin'])->prefix('DummySlug')->as('DummySlug.')->group(function () {
 		Route::get('/', [DummyClass::class, 'index'])->name('index');

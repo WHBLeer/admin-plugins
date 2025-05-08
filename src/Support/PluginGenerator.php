@@ -37,6 +37,7 @@ class PluginGenerator
 			'Http/Controllers',
 			'Commands',
 			'Models',
+			'Providers',
 			'Resources/views',
 			'Resources/lang',
 			'Routes',
@@ -55,6 +56,7 @@ class PluginGenerator
 		$this->createController();
 		$this->createConfigController();
 		$this->createServiceProvider();
+		$this->createRouteServiceProvider();
 		$this->createModel();
 		$this->createView();
 		$this->createLang();
@@ -134,7 +136,7 @@ class PluginGenerator
 
 	protected function createServiceProvider()
 	{
-		$stub = File::get($this->stubsPath . '/PluginServiceProvider.stub');
+		$stub = File::get($this->stubsPath . '/provider/provider.stub');
 		$content = str_replace(
 			['DummyNamespace', 'DummyClass', 'DummyName', 'DummyCommandClass'],
 			[$this->getNamespace(), $this->getStudlyName() . 'ServiceProvider',$this->getSlugName(),'\\Plugins\\'.$this->getStudlyName().'\\Commands\\'.$this->getStudlyName().'Command'],
@@ -142,7 +144,22 @@ class PluginGenerator
 		);
 
 		File::put(
-			$this->pluginPath . '/' . $this->getStudlyName() . 'ServiceProvider.php',
+			$this->pluginPath . '/Providers/' . $this->getStudlyName() . 'ServiceProvider.php',
+			$content
+		);
+	}
+
+	protected function createRouteServiceProvider()
+	{
+		$stub = File::get($this->stubsPath . '/provider/route-provider.stub');
+		$content = str_replace(
+			['DummyNamespace', 'DummyClass', 'DummyName'],
+			[$this->getNamespace(), 'RouteServiceProvider',$this->getSlugName()],
+			$stub
+		);
+
+		File::put(
+			$this->pluginPath . '/Providers/RouteServiceProvider.php',
 			$content
 		);
 	}
@@ -197,17 +214,25 @@ class PluginGenerator
 
 	protected function createRoute()
 	{
-		$stub = File::get($this->stubsPath . '/route.stub');
-		$content = str_replace(
-			['DummyNamespace', 'DummyClass', 'DummyConfigClass', 'DummySlug'],
-			[$this->getNamespace(), $this->getStudlyName() . 'Controller', $this->getStudlyName() . 'ConfigController', $this->getSlugName()],
-			$stub
-		);
+		$stubPath = $this->stubsPath . '/route';
+		$routePath = $this->pluginPath . '/Route';
 
-		File::put(
-			$this->pluginPath . '/Routes/web.php',
-			$content
-		);
+		// 遍历所有 .stub 文件
+		$files = File::files($stubPath);
+
+		foreach ($files as $file) {
+			$fileName = basename($file, '.stub'); // 获取不带 .stub 的文件名
+			$stubContent = File::get($file);
+
+			// 替换占位符
+			$content = str_replace(
+				['DummyNamespace', 'DummyClass', 'DummyConfigClass', 'DummySlug'],
+				[$this->getNamespace(), $this->getStudlyName() . 'Controller', $this->getStudlyName() . 'ConfigController', $this->getSlugName()],
+				$stubContent
+			);
+
+			File::put($routePath . DIRECTORY_SEPARATOR . $fileName . '.php', $content);
+		}
 	}
 
 	protected function createMigration()
