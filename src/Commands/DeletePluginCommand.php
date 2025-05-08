@@ -1,5 +1,4 @@
 <?php
-// src/Commands/DeletePluginCommand.php
 
 namespace Sanlilin\AdminPlugins\Commands;
 

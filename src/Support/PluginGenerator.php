@@ -155,7 +155,7 @@ class PluginGenerator
 		$files = File::files($stubPath);
 
 		foreach ($files as $file) {
-			$fileName = pathinfo($file, PATHINFO_BASENAME, '.stub'); // 获取不带扩展名的文件名
+			$fileName = basename($file, '.stub'); // 获取不带 .stub 的文件名
 			$stubContent = File::get($file);
 
 			// 替换占位符

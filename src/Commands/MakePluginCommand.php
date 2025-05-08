@@ -1,5 +1,4 @@
 <?php
-// src/Commands/MakePluginCommand.php
 
 namespace Sanlilin\AdminPlugins\Commands;
 
@@ -9,7 +8,7 @@ use Symfony\Component\Console\Input\InputArgument;
 
 class MakePluginCommand extends Command
 {
-	protected $name = 'make:plugin';
+	protected $name = 'plugin:make';
 	protected $description = 'Create a new plugin';
 
 	public function handle()

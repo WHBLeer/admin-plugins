@@ -1,5 +1,4 @@
 <?php
-// src/Commands/MakePluginControllerCommand.php
 
 namespace Sanlilin\AdminPlugins\Commands;
 

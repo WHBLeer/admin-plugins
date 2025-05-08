@@ -1,5 +1,4 @@
 <?php
-// src/Commands/PluginMigrateCommand.php
 
 namespace Sanlilin\AdminPlugins\Commands;
 

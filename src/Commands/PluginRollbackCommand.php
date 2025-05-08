@@ -1,5 +1,4 @@
 <?php
-// src/Commands/PluginRollbackCommand.php
 
 namespace Sanlilin\AdminPlugins\Commands;
 
